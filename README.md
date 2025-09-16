@@ -111,7 +111,13 @@ print(f"Prediction for Input=9: {prediction:.2f}")
 ## OUTPUT
 
 ### Training Loss Vs Iteration Plot
+
+
 <img width="776" height="581" alt="Screenshot 2025-09-16 105510" src="https://github.com/user-attachments/assets/d757ab2f-f407-41da-9973-4e04a12c6fbd" />
+
+
+
+
 
 
 <img width="307" height="42" alt="Screenshot 2025-09-16 105517" src="https://github.com/user-attachments/assets/4ea53d8d-7c3d-49a0-a42a-fbf9f4294c9e" />
