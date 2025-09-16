@@ -42,8 +42,9 @@ Plot the performance plot
 
 Evaluate the model with the testing data.
 
-### New Sample Data Prediction:
-<img width="1099" height="695" alt="Screenshot 2025-08-19 113420" src="https://github.com/user-attachments/assets/331aa43d-18d9-449e-9ec3-51607ef339bf" />
+### Neural Network Model:
+<img width="1384" height="878" alt="Screenshot 2025-09-16 104428" src="https://github.com/user-attachments/assets/23036215-0bf2-41e5-a20e-cc43cdc7201f" />
+
 
 
 
@@ -51,62 +52,69 @@ Evaluate the model with the testing data.
 ### Name: MOHANRAM GUNASEKAR
 ### Register Number: 212223240095
 ```python
-import torch.nn as nn
 class NeuralNet(nn.Module):
-  def __init__(self):
-    super().__init__()
-    self.fc1=nn.Linear(1,8)
-    self.fc2=nn.Linear(8,10)
-    self.fc3=nn.Linear(10,1)
-    self.relu=nn.ReLU()
-    self.history={'loss':[]}
+    def __init__(self):
+        super().__init__()
+        # A simple 2-hidden-layer network
+        self.net = nn.Sequential(
+            nn.Linear(1, 16),  # Input -> first hidden (16 neurons)
+            nn.ReLU(),
+            nn.Linear(16, 8),  # first hidden -> second hidden (8 neurons)
+            nn.ReLU(),
+            nn.Linear(8, 1)    # second hidden -> output (1 neuron)
+        )
+        self.history = {'loss': []}
 
-  def forward(self,x):
-    x=self.relu(self.fc1(x))
-    x=self.relu(self.fc2(x))
-    x=self.fc3(x)
-    return x
+    def forward(self, x):
+        return self.net(x)
 
+ai_brain  = NeuralNet()
+criterion = nn.MSELoss()                   # Regression loss
+optimizer = optim.Adam(ai_brain.parameters(), lr=0.01)
 
-# Initialize the Model, Loss Function, and Optimizer
-leo = NeuralNet()
-criterion=nn.MSELoss()
-optimizer=torch.optim.RMSprop(leo.parameters(),lr=0.001)
+def train_model(ai_brain, X_train, y_train, criterion, optimizer, epochs=2000):
+    for epoch in range(1, epochs + 1):
+        optimizer.zero_grad()
+        outputs = ai_brain(X_train)
+        loss    = criterion(outputs, y_train)
+        loss.backward()
+        optimizer.step()
 
+        ai_brain.history['loss'].append(loss.item())
+        if epoch % 200 == 0:
+            print(f"Epoch [{epoch}/{epochs}], Loss: {loss.item():.6f}")
 
-def train_model(leo,X_train,y_train,criterion,optimizer,epochs=2000):
-  for epoch in range(epochs):
-    optimizer.zero_grad()
-    loss = criterion(leo(X_train),y_train)
-    loss.backward()
-    optimizer.step()
+train_model(ai_brain, X_train_tensor, y_train_tensor, criterion, optimizer)
 
-    leo.history['loss'].append(loss.item())
-    if epoch % 200 == 0:
-      print(f"Epoch [{epoch}/{epochs}], Loss: {loss.item():.6f}")
-
-train_model(leo,X_train_tensor,Y_train_tensor,criterion,optimizer)
 with torch.no_grad():
-  test_loss=criterion(leo(X_test_tensor),Y_test_tensor)
-  print(f"Test loss: {test_loss.item():.6f}")
+    test_loss = criterion(ai_brain(X_test_tensor), y_test_tensor)
+    print(f"Test Loss: {test_loss.item():.6f}")
 
-import matplotlib.pyplot as plt
-plt.plot(leo.history['loss'])
-plt.title("Loss curve")
+loss_df = pd.DataFrame(ai_brain.history)
+loss_df.plot()
 plt.xlabel("Epochs")
 plt.ylabel("Loss")
+plt.title("Loss during Training")
+plt.show()
 
+X_n1_1 = torch.tensor([[9]], dtype=torch.float32)
+scaled_input = torch.tensor(scaler.transform(X_n1_1), dtype=torch.float32)
+prediction = ai_brain(scaled_input).item()
+print(f"Prediction for Input=9: {prediction:.2f}")
 
 
 ```
 ## Dataset Information
-<img width="694" height="434" alt="Screenshot 2025-08-19 111205" src="https://github.com/user-attachments/assets/0c2fb7d1-c0ad-4684-8cc8-6be5c6660b8d" />
+<img width="179" height="510" alt="image" src="https://github.com/user-attachments/assets/d31273bf-8bdd-4bdb-835d-e0f04a38896e" />
+
 
 ## OUTPUT
 
 ### Training Loss Vs Iteration Plot
-<img width="939" height="501" alt="Screenshot 2025-08-19 111219" src="https://github.com/user-attachments/assets/40ee4f47-522c-413f-a7c1-99c95ce77b0f" />
+<img width="776" height="581" alt="Screenshot 2025-09-16 105510" src="https://github.com/user-attachments/assets/d757ab2f-f407-41da-9973-4e04a12c6fbd" />
 
+
+<img width="307" height="42" alt="Screenshot 2025-09-16 105517" src="https://github.com/user-attachments/assets/4ea53d8d-7c3d-49a0-a42a-fbf9f4294c9e" />
 
 
 ## RESULT
